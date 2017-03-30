@@ -1,32 +1,57 @@
-"""Easier and more pythonic usage of :module:`pygame`."""
+"""Easier and more pythonic usage of :mod:`pygame`."""
 
 import pygame
 
 
 class Application:
-    """A :module:`pygame` application.
+    """The class for creating a :mod:`pygame` application.
 
-    Simple wrapper around :module:`pygame` to make the initialization,
-    deinitialization, and scene management seamless.
+    A simple wrapper around :mod:`pygame`, which initializes and quits
+    :mod:`pygame` as the application starts/ends. Also makes the scene
+    management seamless and fun together with :class:`Scene`.
+
+    Example usage:
+
+    .. code-block:: python
+
+        class Menu(ezpygame.Scene):
+            ...
+
+        class Game(ezpygame.Scene):
+            ...
+
+        app = ezpygame.Application(
+            title='My First EzPyGame Application',
+            size=(1280, 720),
+            update_rate=60,
+        )
+        main_menu = Menu()
+        app.run(main_menu)
     """
 
-    def __init__(self, title='EzPyGame App', size=(640, 480), update_rate=30):
+    def __init__(self,
+                 title='EzPyGame App',
+                 size=(640, 480),
+                 update_rate=30,
+                 initial_scene=None):
         """Initialize the application with window settings.
 
         :param str title: title to display in the window's title bar
-        :param tuple[int, int] size: size of the screen
+        :param tuple[int,int] size: size of the screen
         :param int update_rate: how many times per second to update
+        :param Scene|None initial_scene: scene where to start from
         """
         pygame.init()
         self._screen = pygame.display.set_mode(size)
         pygame.display.set_caption(title)
         self._update_rate = update_rate
+        self._scene = initial_scene
 
     def update_settings(self, *, title=None, size=None, update_rate=None):
         """Update the application's settings.
 
         :param str title: title to display in the window's title bar
-        :param tuple[int, int] size: size of the screen
+        :param tuple[int,int] size: size of the screen
         :param int update_rate: how many times per second to update
         """
         if title is not None:
@@ -45,85 +70,121 @@ class Application:
             'update_rate': self._update_rate,
         }
 
-    def run(self, scene):
+    @property
+    def active_scene(self):
+        """The currently active scene."""
+        return self._scene
+
+    def change_scene(self, scene):
+        """Change the currently active scene in the application.
+
+        This will change the current scene and invoke
+        :meth:`Scene.on_exit` and :meth:`Scene.on_enter`
+        on the switching scenes (unless ``None``).
+
+        The scene will change after the next update.
+
+        :param Scene scene: the scene to change into
+        """
+        if self._scene is not None:
+            self._scene.on_exit(next_scene=scene)
+        self._scene, old_scene = scene, self._scene
+        if self._scene is not None:
+            self._scene.on_enter(previous_scene=old_scene)
+
+    def run(self, scene=None):
         """Run the application.
 
         :param Scene scene: initial scene to start the execution from
         """
+        if scene is None:
+            if self.scene is None:
+                raise ValueError('No scene provided')
+        else:
+            self.scene = scene
+
         clock = pygame.time.Clock()
 
         done = False
-        while not done:
+        while not done and self.scene is not None:
 
-            scene.draw(self, self._screen)
+            self.scene.draw(self, self._screen)
             pygame.display.update()
 
             for event in pygame.event.get():
-                scene.handle_event(self, event)
+                self.scene.handle_event(self, event)
                 if event.type == pygame.QUIT:
                     done = True
 
             dt = clock.tick(self._update_rate)
-            scene.update(self, dt)
+            self.scene.update(self, dt)
 
-            if scene.is_done():
-                scene, old_scene = scene._next_scene, scene
-                old_scene.on_exit(self, scene)
-                if scene is None:
-                    done = True
-                else:
-                    Scene.__init__(scene)
-                    scene.on_enter(self, old_scene)
+        if self.scene:  # Exit happened through done = True
+            self.change_scene(None)  # Trigger on_exit()
 
         pygame.quit()
 
 
 class Scene:
-    """A simple scene for an application.
+    """An individual scene in the application.
 
-    Create a scene by subclassing and overriding any needed methods:
+    Create a scene by subclassing and overriding any of the methods.
 
-        class MyScene(Scene):
+    Example usage with two scenes interacting:
+
+    .. code-block:: python
+
+        class Menu(Scene):
+
+            def __init__(self):
+                self.font = pygame.font.Font(...)
+
+            def on_enter(self, app, previous_scene):
+                app.update_settings(title='Main Menu', update_rate=30)
 
             def draw(self, app, screen):
-                ...
-
-            def update(self, app, dt):
-                ...
+                pygame.draw.rect(...)
+                text = self.font.render(...)
+                screen.blit(text, ...)
 
             def handle_event(self, app, event):
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if event.button == 1:
+                        game_size = self._get_game_size(event.pos)
+                        self.change_scene(Game(game_size))
+
+            def _get_game_size(self, mouse_pos_upon_click):
+                ...
+
+
+        class Game(ezpygame.Scene):
+
+            def __init__(self, size):
+                super().__init__()
+                self.size = size
+                self.player = ...
                 ...
 
             def on_enter(self, app, previous_scene):
-                ...
+                self.previous_scene = previous_scene
+                app.update_settings(title='The Game!', update_rate=60)
 
-            def on_exit(self, app, next_scene):
+            def draw(self, app, screen):
+                self.player.draw(screen)
+                for enemy in self.enemies:
+                    ...
+
+            def update(self, app, dt):
+                self.player.move(dt)
                 ...
+                if self.player.is_dead():
+                    app.change_scene(self.previous_scene)
+                elif self.player_won():
+                    app.change_scene(...)
+
+            def handle_event(self, app, event):
+                ...  # Player movement etc.
     """
-
-    # Default value for _next_scene so None can be used to stop
-    __SENTINEL = object()
-
-    def __init__(self):
-        self._next_scene = Scene.__SENTINEL
-
-    def change_scene(self, scene):
-        """Change the scene to another one.
-
-        Flags the scene as done (see :method:`is_done`) so that
-        :func:`run` knows to change the scene (or exit upon ``None``).
-
-        :param Scene scene: scene that wants focus, or ``None`` to quit
-        """
-        self._next_scene = scene
-
-    def is_done(self):
-        """Is the scene done executing?
-
-        This will return ``True`` after :method:`change_scene` has been
-        called, so that :func:`run` knows the scene wants to quit.
-        """
-        return self._next_scene is not Scene.__SENTINEL
 
     def draw(self, app, screen):
         """Draw the scene.
@@ -142,7 +203,7 @@ class Scene:
     def handle_event(self, app, event):
         """Process an event.
 
-        All of :module:`pygame`'s events are sent here, so filtering
+        All of :mod:`pygame`'s events are sent here, so filtering
         should be applied manually in the subclass.
 
         :param Application app: application running the scene

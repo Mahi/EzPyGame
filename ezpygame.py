@@ -10,7 +10,7 @@ class Application:
     deinitialization, and scene management seamless.
     """
 
-    def __init__(self, title, size, update_rate=30):
+    def __init__(self, title='EzPyGame App', size=(640, 480), update_rate=30):
         """Initialize the application with window settings.
 
         :param str title: title to display in the window's title bar

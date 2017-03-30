@@ -1,4 +1,10 @@
-env/
+# python
 __pycache__/
-setup.cfg
+
+# virtualenv
+env/
+
+# pypi
+dist/
+MANIFEST
 setup.py

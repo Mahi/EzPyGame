@@ -27,7 +27,7 @@ Now create an `ezpygame.Application` instance and start the program's execution 
     main_menu = MenuScene()
     app.run(main_menu)
 
-Scenes can be switched by using the `Scene.change_scene(scene)` method.
+Scenes can be switched by using the `Application.change_scene(scene)` method.
 
 
 ## Example usage
@@ -44,7 +44,7 @@ Scenes can be switched by using the `Scene.change_scene(scene)` method.
 
         def handle_event(self, app, event):
             if event.type == pygame.MOUSEDOWN and ...:
-                self.change_scene(Game(...))
+                app.change_scene(Game(...))
 
         def on_enter(self, app, previous_scene):
             app.update_settings(size=(640, 480))

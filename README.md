@@ -3,13 +3,31 @@
 ## Introduction
 
 `EzPyGame` aims to make the usage of [`pygame`](https://www.pygame.org/)
-even easier. It implements easy scene management tools and an application
-class for initializing and running scenes easily.
+easier and more pythonic than before.  It implements easy scene management tools and an application class for initializing `pygame` and running scenes easily.
 
 
 ## Installation
 
     pip install ezpygame
+
+
+## Usage
+
+Create your scenes by subclassing `ezpygame.Scene` class and overriding the following methods (everything is optional, so override only the ones you actually need):
+
+ - `draw(self, app, screen)`
+ - `update(self, app, dt)`
+ - `handle_event(self, app, event)`
+ - `on_enter(self, app, previous_scene)`
+ - `on_exit(self, app, next_scene)`
+
+Now create an `ezpygame.Application` instance and start the program's execution from any scene instance you want:
+
+    app = ezpygame.Application(update_rate=60)  # 60 fps!
+    main_menu = MenuScene()
+	app.run(main_menu)
+
+Scenes can be switched by using the `Scene.change_scene(scene)` method.
 
 
 ## Example usage

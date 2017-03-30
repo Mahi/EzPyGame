@@ -86,11 +86,11 @@ class Application:
 
         :param Scene scene: the scene to change into
         """
-        if self._scene is not None:
-            self._scene.on_exit(next_scene=scene)
-        self._scene, old_scene = scene, self._scene
-        if self._scene is not None:
-            self._scene.on_enter(previous_scene=old_scene)
+        if self.active_scene is not None:
+            self.active_scene.on_exit(self, next_scene=scene)
+        self._scene, old_scene = scene, self.active_scene
+        if self.active_scene is not None:
+            self.active_scene.on_enter(self, previous_scene=old_scene)
 
     def run(self, scene=None):
         """Run the application.
@@ -98,28 +98,28 @@ class Application:
         :param Scene scene: initial scene to start the execution from
         """
         if scene is None:
-            if self.scene is None:
+            if self.active_scene is None:
                 raise ValueError('No scene provided')
         else:
-            self.scene = scene
+            self._scene = scene
 
         clock = pygame.time.Clock()
 
         done = False
-        while not done and self.scene is not None:
+        while not done and self.active_scene is not None:
 
-            self.scene.draw(self, self._screen)
+            self.active_scene.draw(self, self._screen)
             pygame.display.update()
 
             for event in pygame.event.get():
-                self.scene.handle_event(self, event)
+                self.active_scene.handle_event(self, event)
                 if event.type == pygame.QUIT:
                     done = True
 
             dt = clock.tick(self._update_rate)
-            self.scene.update(self, dt)
+            self.active_scene.update(self, dt)
 
-        if self.scene:  # Exit happened through done = True
+        if self.active_scene:  # Exit happened through done = True
             self.change_scene(None)  # Trigger on_exit()
 
         pygame.quit()

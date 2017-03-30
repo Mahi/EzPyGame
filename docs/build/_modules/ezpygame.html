@@ -1,0 +1,312 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ezpygame &#8212; EzPyGame 0.2.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for ezpygame</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Easier and more pythonic usage of :mod:`pygame`.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">pygame</span>
+
+
+<div class="viewcode-block" id="Application"><a class="viewcode-back" href="../index.html#ezpygame.Application">[docs]</a><span class="k">class</span> <span class="nc">Application</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;The class for creating a :mod:`pygame` application.</span>
+
+<span class="sd">    A simple wrapper around :mod:`pygame`, which initializes and quits</span>
+<span class="sd">    :mod:`pygame` as the application starts/ends. Also makes the scene</span>
+<span class="sd">    management seamless and fun together with :class:`Scene`.</span>
+
+<span class="sd">    Example usage:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        class Menu(ezpygame.Scene):</span>
+<span class="sd">            ...</span>
+
+<span class="sd">        class Game(ezpygame.Scene):</span>
+<span class="sd">            ...</span>
+
+<span class="sd">        app = ezpygame.Application(</span>
+<span class="sd">            title=&#39;My First EzPyGame Application&#39;,</span>
+<span class="sd">            size=(1280, 720),</span>
+<span class="sd">            update_rate=60,</span>
+<span class="sd">        )</span>
+<span class="sd">        main_menu = Menu()</span>
+<span class="sd">        app.run(main_menu)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Application.__init__"><a class="viewcode-back" href="../index.html#ezpygame.Application.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">title</span><span class="o">=</span><span class="s1">&#39;EzPyGame App&#39;</span><span class="p">,</span>
+                 <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">640</span><span class="p">,</span> <span class="mi">480</span><span class="p">),</span>
+                 <span class="n">update_rate</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+                 <span class="n">initial_scene</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize the application with window settings.</span>
+
+<span class="sd">        :param str title: title to display in the window&#39;s title bar</span>
+<span class="sd">        :param tuple[int,int] size: size of the screen</span>
+<span class="sd">        :param int update_rate: how many times per second to update</span>
+<span class="sd">        :param Scene|None initial_scene: scene where to start from</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_screen</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_caption</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_rate</span> <span class="o">=</span> <span class="n">update_rate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span> <span class="o">=</span> <span class="n">initial_scene</span></div>
+
+<div class="viewcode-block" id="Application.update_settings"><a class="viewcode-back" href="../index.html#ezpygame.Application.update_settings">[docs]</a>    <span class="k">def</span> <span class="nf">update_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update_rate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update the application&#39;s settings.</span>
+
+<span class="sd">        :param str title: title to display in the window&#39;s title bar</span>
+<span class="sd">        :param tuple[int,int] size: size of the screen</span>
+<span class="sd">        :param int update_rate: how many times per second to update</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_caption</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">size</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_screen</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">update_rate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_rate</span> <span class="o">=</span> <span class="n">update_rate</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">settings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get a dictionary of the application&#39;s settings.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">get_caption</span><span class="p">(),</span>
+            <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_screen</span><span class="o">.</span><span class="n">get_size</span><span class="p">(),</span>
+            <span class="s1">&#39;update_rate&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_rate</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">active_scene</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The currently active scene.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span>
+
+<div class="viewcode-block" id="Application.change_scene"><a class="viewcode-back" href="../index.html#ezpygame.Application.change_scene">[docs]</a>    <span class="k">def</span> <span class="nf">change_scene</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scene</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Change the currently active scene in the application.</span>
+
+<span class="sd">        This will change the current scene and invoke</span>
+<span class="sd">        :meth:`Scene.on_exit` and :meth:`Scene.on_enter`</span>
+<span class="sd">        on the switching scenes (unless ``None``).</span>
+
+<span class="sd">        The scene will change after the next update.</span>
+
+<span class="sd">        :param Scene scene: the scene to change into</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">on_exit</span><span class="p">(</span><span class="n">next_scene</span><span class="o">=</span><span class="n">scene</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="p">,</span> <span class="n">old_scene</span> <span class="o">=</span> <span class="n">scene</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">on_enter</span><span class="p">(</span><span class="n">previous_scene</span><span class="o">=</span><span class="n">old_scene</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Application.run"><a class="viewcode-back" href="../index.html#ezpygame.Application.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scene</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run the application.</span>
+
+<span class="sd">        :param Scene scene: initial scene to start the execution from</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">scene</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No scene provided&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scene</span> <span class="o">=</span> <span class="n">scene</span>
+
+        <span class="n">clock</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Clock</span><span class="p">()</span>
+
+        <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_screen</span><span class="p">)</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">handle_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">QUIT</span><span class="p">:</span>
+                    <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="n">dt</span> <span class="o">=</span> <span class="n">clock</span><span class="o">.</span><span class="n">tick</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_update_rate</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="p">:</span>  <span class="c1"># Exit happened through done = True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">change_scene</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>  <span class="c1"># Trigger on_exit()</span>
+
+        <span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="Scene"><a class="viewcode-back" href="../index.html#ezpygame.Scene">[docs]</a><span class="k">class</span> <span class="nc">Scene</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;An individual scene in the application.</span>
+
+<span class="sd">    Create a scene by subclassing and overriding any of the methods.</span>
+
+<span class="sd">    Example usage with two scenes interacting:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        class Menu(Scene):</span>
+
+<span class="sd">            def __init__(self):</span>
+<span class="sd">                self.font = pygame.font.Font(...)</span>
+
+<span class="sd">            def on_enter(self, app, previous_scene):</span>
+<span class="sd">                app.update_settings(title=&#39;Main Menu&#39;, update_rate=30)</span>
+
+<span class="sd">            def draw(self, app, screen):</span>
+<span class="sd">                pygame.draw.rect(...)</span>
+<span class="sd">                text = self.font.render(...)</span>
+<span class="sd">                screen.blit(text, ...)</span>
+
+<span class="sd">            def handle_event(self, app, event):</span>
+<span class="sd">                if event.type == pygame.MOUSEBUTTONUP:</span>
+<span class="sd">                    if event.button == 1:</span>
+<span class="sd">                        game_size = self._get_game_size(event.pos)</span>
+<span class="sd">                        self.change_scene(Game(game_size))</span>
+
+<span class="sd">            def _get_game_size(self, mouse_pos_upon_click):</span>
+<span class="sd">                ...</span>
+
+
+<span class="sd">        class Game(ezpygame.Scene):</span>
+
+<span class="sd">            def __init__(self, size):</span>
+<span class="sd">                super().__init__()</span>
+<span class="sd">                self.size = size</span>
+<span class="sd">                self.player = ...</span>
+<span class="sd">                ...</span>
+
+<span class="sd">            def on_enter(self, app, previous_scene):</span>
+<span class="sd">                self.previous_scene = previous_scene</span>
+<span class="sd">                app.update_settings(title=&#39;The Game!&#39;, update_rate=60)</span>
+
+<span class="sd">            def draw(self, app, screen):</span>
+<span class="sd">                self.player.draw(screen)</span>
+<span class="sd">                for enemy in self.enemies:</span>
+<span class="sd">                    ...</span>
+
+<span class="sd">            def update(self, app, dt):</span>
+<span class="sd">                self.player.move(dt)</span>
+<span class="sd">                ...</span>
+<span class="sd">                if self.player.is_dead():</span>
+<span class="sd">                    app.change_scene(self.previous_scene)</span>
+<span class="sd">                elif self.player_won():</span>
+<span class="sd">                    app.change_scene(...)</span>
+
+<span class="sd">            def handle_event(self, app, event):</span>
+<span class="sd">                ...  # Player movement etc.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Scene.draw"><a class="viewcode-back" href="../index.html#ezpygame.Scene.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">screen</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Draw the scene.</span>
+
+<span class="sd">        :param Application app: application running the scene</span>
+<span class="sd">        :param pygame.Surface screen: screen to draw the scene on</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="Scene.update"><a class="viewcode-back" href="../index.html#ezpygame.Scene.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update the scene.</span>
+
+<span class="sd">        :param Application app: application running the scene</span>
+<span class="sd">        :param int dt: time in milliseconds since the last update</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="Scene.handle_event"><a class="viewcode-back" href="../index.html#ezpygame.Scene.handle_event">[docs]</a>    <span class="k">def</span> <span class="nf">handle_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Process an event.</span>
+
+<span class="sd">        All of :mod:`pygame`&#39;s events are sent here, so filtering</span>
+<span class="sd">        should be applied manually in the subclass.</span>
+
+<span class="sd">        :param Application app: application running the scene</span>
+<span class="sd">        :param pygame.event.Event event: event to handle</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="Scene.on_enter"><a class="viewcode-back" href="../index.html#ezpygame.Scene.on_enter">[docs]</a>    <span class="k">def</span> <span class="nf">on_enter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">previous_scene</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The scene is entered.</span>
+
+<span class="sd">        :param Application app: application running the scene</span>
+<span class="sd">        :param Scene previous_scene: previous scene to run, or ``None``</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="Scene.on_exit"><a class="viewcode-back" href="../index.html#ezpygame.Scene.on_exit">[docs]</a>    <span class="k">def</span> <span class="nf">on_exit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">next_scene</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The scene is exited.</span>
+
+<span class="sd">        :param Application app: application running the scene</span>
+<span class="sd">        :param Scene next_scene: next scene to run, or ``None``</span>
+<span class="sd">        &quot;&quot;&quot;</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Markus Meskanen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

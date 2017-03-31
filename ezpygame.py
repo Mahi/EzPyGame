@@ -180,6 +180,11 @@ class Scene:
     """
 
     def __init__(self):
+        """Initialize the scene.
+
+        :attr:`application` is still ``None`` at this point. Application
+        related initialization should be done in :meth:`on_enter`.
+        """
         self._application = None
 
     @property

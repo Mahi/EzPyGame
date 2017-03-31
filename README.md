@@ -9,26 +9,21 @@ easier and more pythonic than before.  It implements easy scene management tools
     pip install ezpygame
 
 
-## Reference documentation
-
-https://ezpygame.readthedocs.io/
-
-
 ## Quick start
 
 Create scenes by subclassing `ezpygame.Scene` and overriding any of the following methods:
 
- - `draw(self, app, screen)`
- - `update(self, app, dt)`
- - `handle_event(self, app, event)`
- - `on_enter(self, app, previous_scene)`
- - `on_exit(self, app, next_scene)`
+ - `draw(self, screen)`
+ - `update(self, dt)`
+ - `handle_event(self, event)`
+ - `on_enter(self, previous_scene)`
+ - `on_exit(self, next_scene)`
 
 Now create an `ezpygame.Application` instance and start the execution from any scene:
 
     app = ezpygame.Application(
         title='My First EzPyGame Application!',
-        size=(1280, 720),
+        resolution=(1280, 720),
         update_rate=60,
     )
     main_menu = MenuScene()
@@ -39,10 +34,15 @@ Scenes can be switched by using the `Application.change_scene(scene)` method:
     class Game(Scene):
         ...
 
-        def on_enter(self, app, previous_scene):
+        def on_enter(self, previous_scene):
             self.previous_scene = previous_scene
         
-        def update(self, app, dt):
+        def update(self, dt):
             self.player.move(dt)
             if self.player.died():
-                app.change_scene(self.previous_scene)
+                self.application.change_scene(self.previous_scene)
+
+
+## Reference documentation
+
+With more in-depth guide and examples: https://ezpygame.readthedocs.io/

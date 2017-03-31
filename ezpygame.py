@@ -81,10 +81,12 @@ class Application:
         :param Scene scene: the scene to change into
         """
         if self.active_scene is not None:
-            self.active_scene.on_exit(self, next_scene=scene)
+            self.active_scene.on_exit(next_scene=scene)
+            self.active_scene._application = None
         self._scene, old_scene = scene, self.active_scene
         if self.active_scene is not None:
-            self.active_scene.on_enter(self, previous_scene=old_scene)
+            self.active_scene._application = self
+            self.active_scene.on_enter(previous_scene=old_scene)
 
     def run(self, scene=None):
         """Run the application.
@@ -101,17 +103,17 @@ class Application:
 
         while self.active_scene is not None:
 
-            self.active_scene.draw(self, self._screen)
+            self.active_scene.draw(self._screen)
             pygame.display.update()
 
             for event in pygame.event.get():
-                self.active_scene.handle_event(self, event)
+                self.active_scene.handle_event(event)
                 if event.type == pygame.QUIT:
                     self.change_scene(None)  # Trigger Scene.on_exit()
                     return
 
-            dt = clock.tick(self._update_rate)
-            self.active_scene.update(self, dt)
+            dt = clock.tick(self.update_rate)
+            self.active_scene.update(dt)
 
 
 class Scene:
@@ -128,16 +130,16 @@ class Scene:
             def __init__(self):
                 self.font = pygame.font.Font(...)
 
-            def on_enter(self, app, previous_scene):
-                app.title = 'Main Menu',
-                app.update_rate = 30
+            def on_enter(self, previous_scene):
+                self.application.title = 'Main Menu',
+                self.application.update_rate = 30
 
-            def draw(self, app, screen):
+            def draw(self, screen):
                 pygame.draw.rect(...)
                 text = self.font.render(...)
                 screen.blit(text, ...)
 
-            def handle_event(self, app, event):
+            def handle_event(self, event):
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
                         game_size = self._get_game_size(event.pos)
@@ -155,62 +157,65 @@ class Scene:
                 self.player = ...
                 ...
 
-            def on_enter(self, app, previous_scene):
+            def on_enter(self, previous_scene):
                 self.previous_scene = previous_scene
-                app.title = 'The Game!',
-                app.update_rate = 60
+                self.application.title = 'The Game!',
+                sefl.application.update_rate = 60
 
-            def draw(self, app, screen):
+            def draw(self, screen):
                 self.player.draw(screen)
                 for enemy in self.enemies:
                     ...
 
-            def update(self, app, dt):
+            def update(self, dt):
                 self.player.move(dt)
                 ...
                 if self.player.is_dead():
-                    app.change_scene(self.previous_scene)
+                    self.application.change_scene(self.previous_scene)
                 elif self.player_won():
-                    app.change_scene(...)
+                    self.application.change_scene(...)
 
-            def handle_event(self, app, event):
+            def handle_event(self, event):
                 ...  # Player movement etc.
     """
 
-    def draw(self, app, screen):
+    def __init__(self):
+        self._application = None
+
+    @property
+    def application(self):
+        """The application currently running the scene."""
+        return self._application
+
+    def draw(self, screen):
         """Draw the scene.
 
-        :param Application app: application running the scene
         :param pygame.Surface screen: screen to draw the scene on
         """
 
-    def update(self, app, dt):
+    def update(self, dt):
         """Update the scene.
 
-        :param Application app: application running the scene
         :param int dt: time in milliseconds since the last update
         """
 
-    def handle_event(self, app, event):
+    def handle_event(self, event):
         """Process an event.
 
         All of :mod:`pygame`'s events are sent here, so filtering
         should be applied manually in the subclass.
 
-        :param Application app: application running the scene
         :param pygame.event.Event event: event to handle
         """
 
-    def on_enter(self, app, previous_scene=None):
+    def on_enter(self, previous_scene=None):
         """The scene is entered.
 
-        :param Application app: application running the scene
         :param Scene previous_scene: previous scene to run, or ``None``
         """
 
-    def on_exit(self, app, next_scene=None):
+    def on_exit(self, next_scene=None):
         """The scene is exited.
 
-        :param Application app: application running the scene
         :param Scene next_scene: next scene to run, or ``None``
         """

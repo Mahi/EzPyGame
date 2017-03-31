@@ -32,18 +32,16 @@ class Application:
     def __init__(self,
                  title='EzPyGame App',
                  resolution=(640, 480),
-                 update_rate=30,
-                 initial_scene=None):
+                 update_rate=30):
         """Initialize the application with window settings.
 
         :param str title: title to display in the window's title bar
         :param tuple[int,int] resolution: resolution of the game window
         :param int update_rate: how many times per second to update
-        :param Scene|None initial_scene: scene where to start from
         """
         pygame.init()
         self.update_rate = update_rate
-        self._scene = initial_scene
+        self._scene = None
         # Trigger property setters
         self.title = title
         self.resolution = resolution
@@ -97,12 +95,11 @@ class Application:
             if self.active_scene is None:
                 raise ValueError('No scene provided')
         else:
-            self._scene = scene
+            self.change_scene(scene)
 
         clock = pygame.time.Clock()
 
-        done = False
-        while not done and self.active_scene is not None:
+        while self.active_scene is not None:
 
             self.active_scene.draw(self, self._screen)
             pygame.display.update()
@@ -110,15 +107,11 @@ class Application:
             for event in pygame.event.get():
                 self.active_scene.handle_event(self, event)
                 if event.type == pygame.QUIT:
-                    done = True
+                    self.change_scene(None)  # Trigger Scene.on_exit()
+                    return
 
             dt = clock.tick(self._update_rate)
             self.active_scene.update(self, dt)
-
-        if self.active_scene:  # Exit happened through done = True
-            self.change_scene(None)  # Trigger on_exit()
-
-        pygame.quit()
 
 
 class Scene:

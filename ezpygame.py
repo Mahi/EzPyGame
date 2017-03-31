@@ -22,7 +22,7 @@ class Application:
 
         app = ezpygame.Application(
             title='My First EzPyGame Application',
-            size=(1280, 720),
+            resolution=(1280, 720),
             update_rate=60,
         )
         main_menu = Menu()
@@ -31,33 +31,33 @@ class Application:
 
     def __init__(self,
                  title='EzPyGame App',
-                 size=(640, 480),
+                 resolution=(640, 480),
                  update_rate=30,
                  initial_scene=None):
         """Initialize the application with window settings.
 
         :param str title: title to display in the window's title bar
-        :param tuple[int,int] size: size of the screen
+        :param tuple[int,int] resolution: resolution of the game window
         :param int update_rate: how many times per second to update
         :param Scene|None initial_scene: scene where to start from
         """
         pygame.init()
-        self._screen = pygame.display.set_mode(size)
+        self._screen = pygame.display.set_mode(resolution)
         pygame.display.set_caption(title)
         self._update_rate = update_rate
         self._scene = initial_scene
 
-    def update_settings(self, *, title=None, size=None, update_rate=None):
+    def update_settings(self, *, title=None, resolution=None, update_rate=None):
         """Update the application's settings.
 
         :param str title: title to display in the window's title bar
-        :param tuple[int,int] size: size of the screen
+        :param tuple[int,int] resolution: resolution of the game window
         :param int update_rate: how many times per second to update
         """
         if title is not None:
             pygame.display.set_caption(title)
-        if size is not None:
-            self._screen = pygame.display.set_mode(size)
+        if resolution is not None:
+            self._screen = pygame.display.set_mode(resolution)
         if update_rate is not None:
             self._update_rate = update_rate
 
@@ -66,7 +66,7 @@ class Application:
         """Get a dictionary of the application's settings."""
         return {
             'title': pygame.display.get_caption(),
-            'size': self._screen.get_size(),
+            'resolution': self._screen.get_size(),
             'update_rate': self._update_rate,
         }
 

@@ -1,7 +1,5 @@
 # EzPyGame
 
-## Introduction
-
 `EzPyGame` aims to make the usage of [`pygame`](https://www.pygame.org/)
 easier and more pythonic than before.  It implements easy scene management tools and an application class for initializing `pygame` and running scenes easily.
 

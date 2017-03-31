@@ -42,33 +42,29 @@ class Application:
         :param Scene|None initial_scene: scene where to start from
         """
         pygame.init()
-        self._screen = pygame.display.set_mode(resolution)
-        pygame.display.set_caption(title)
-        self._update_rate = update_rate
+        self.update_rate = update_rate
         self._scene = initial_scene
-
-    def update_settings(self, *, title=None, resolution=None, update_rate=None):
-        """Update the application's settings.
-
-        :param str title: title to display in the window's title bar
-        :param tuple[int,int] resolution: resolution of the game window
-        :param int update_rate: how many times per second to update
-        """
-        if title is not None:
-            pygame.display.set_caption(title)
-        if resolution is not None:
-            self._screen = pygame.display.set_mode(resolution)
-        if update_rate is not None:
-            self._update_rate = update_rate
+        # Trigger property setters
+        self.title = title
+        self.resolution = resolution
 
     @property
-    def settings(self):
-        """Get a dictionary of the application's settings."""
-        return {
-            'title': pygame.display.get_caption(),
-            'resolution': self._screen.get_size(),
-            'update_rate': self._update_rate,
-        }
+    def title(self):
+        """The title to display in the application's game window."""
+        return pygame.display.get_caption()
+
+    @title.setter
+    def title(self, value):
+        pygame.display.set_caption(value)
+
+    @property
+    def resolution(self):
+        """The application's game window's resolution."""
+        return self._screen.get_size()
+
+    @resolution.setter
+    def resolution(self, value):
+        self._screen = pygame.display.set_mode(value)
 
     @property
     def active_scene(self):

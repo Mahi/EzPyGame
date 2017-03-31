@@ -129,7 +129,8 @@ class Scene:
                 self.font = pygame.font.Font(...)
 
             def on_enter(self, app, previous_scene):
-                app.update_settings(title='Main Menu', update_rate=30)
+                app.title = 'Main Menu',
+                app.update_rate = 30
 
             def draw(self, app, screen):
                 pygame.draw.rect(...)
@@ -156,7 +157,8 @@ class Scene:
 
             def on_enter(self, app, previous_scene):
                 self.previous_scene = previous_scene
-                app.update_settings(title='The Game!', update_rate=60)
+                app.title = 'The Game!',
+                app.update_rate = 60
 
             def draw(self, app, screen):
                 self.player.draw(screen)

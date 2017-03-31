@@ -11,9 +11,9 @@ easier and more pythonic than before.  It implements easy scene management tools
     pip install ezpygame
 
 
-## Usage
+## Quick start
 
-Create your scenes by subclassing `ezpygame.Scene` class and overriding the following methods (everything is optional, so override only the ones you actually need):
+Create scenes by subclassing `ezpygame.Scene` and overriding any of the following methods:
 
  - `draw(self, app, screen)`
  - `update(self, app, dt)`
@@ -21,59 +21,30 @@ Create your scenes by subclassing `ezpygame.Scene` class and overriding the foll
  - `on_enter(self, app, previous_scene)`
  - `on_exit(self, app, next_scene)`
 
-Now create an `ezpygame.Application` instance and start the program's execution from any scene instance you want:
+Now create an `ezpygame.Application` instance and start the execution from any scene:
 
-    app = ezpygame.Application(update_rate=60)  # 60 fps!
+    app = ezpygame.Application(
+		title='My First EzPyGame Application!',
+		size=(1280, 720),
+		update_rate=60,
+	)
     main_menu = MenuScene()
     app.run(main_menu)
 
-Scenes can be switched by using the `Application.change_scene(scene)` method.
+Scenes can be switched by using the `Application.change_scene(scene)` method:
+
+    class Game(Scene):
+		...
+
+		def on_enter(self, app, previous_scene):
+			self.previous_scene = previous_scene
+		
+		def update(self, app, dt):
+			self.player.move(dt)
+			if self.player.died():
+				app.change_scene(self.previous_scene)
 
 
-## Example usage
+## Reference documentation
 
-    import ezpygame
-    import pygame
-
-
-    class Menu(ezpygame.Scene):
-
-        def draw(self, app, screen):
-            screen.blit(...)
-            ...
-
-        def handle_event(self, app, event):
-            if event.type == pygame.MOUSEDOWN and ...:
-                app.change_scene(Game(...))
-
-        def on_enter(self, app, previous_scene):
-            app.update_settings(size=(640, 480))
-
-
-    class Game(ezpygame.Scene):
-
-        def __init__(self, bar, ...):
-            super().__init__()
-            self.foo = bar
-            ...
-
-        def draw(self, app, screen):
-            ...
-
-        def update(self, app, dt):
-            self.player.move(dt)
-            ...
-
-        def handle_event(self, app, event):
-            ...
-            if self.player.died():
-                self.change_scene(self.previous_scene)
-
-        def on_enter(self, app, previous_scene):
-            self.previous_scene = previous_scene
-            app.update_settings(size=(1280, 720))
-
-
-    app = ezpygame.Application('My Application', (640, 480), update_rate=30)
-    menu = Menu()
-    app.run(menu)
+https://ezpygame.readthedocs.io/

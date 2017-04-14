@@ -102,9 +102,6 @@ class Application:
 
         while self.active_scene is not None:
 
-            self.active_scene.draw(self._screen)
-            pygame.display.update()
-
             for event in pygame.event.get():
                 self.active_scene.handle_event(event)
                 if event.type == pygame.QUIT:
@@ -113,3 +110,6 @@ class Application:
 
             dt = clock.tick(self.update_rate)
             self.active_scene.update(dt)
+
+            self.active_scene.draw(self._screen)
+            pygame.display.update()

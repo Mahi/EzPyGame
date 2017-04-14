@@ -13,9 +13,9 @@ easier and more pythonic than before.  It implements easy scene management tools
 
 Create scenes by subclassing `ezpygame.Scene` and overriding any of the following methods:
 
+ - `handle_event(self, event)`
  - `draw(self, screen)`
  - `update(self, dt)`
- - `handle_event(self, event)`
  - `on_enter(self, previous_scene)`
  - `on_exit(self, next_scene)`
 

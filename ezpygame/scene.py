@@ -61,15 +61,46 @@ class Scene:
 
             def handle_event(self, event):
                 ...  # Player movement etc.
-    """
 
-    def __init__(self):
+    You can also use class variables to define custom application
+    settings for when the scene is entered:
+
+    .. code-block:: python
+
+        class MyScene(Scene):
+            title = 'My Awesome Scene'
+            resolution = (640, 480)
+            update_rate = 60
+
+    Any of these can be left out (defaults to ``None``) to not override
+    that particular setting. If you do override :meth:`on_enter`, you
+    must call ``super().on_enter(previous_scene)`` in the subclass.
+
+    These settings can further be overridden in individual instances:
+
+    .. code-block:: python
+
+        my_scene0 = MyScene()
+        my_scene0.resolution = (1280, 720)
+        my_scene1 = MyScene(title='My Second Awesome Scene')
+    """
+    title = None
+    resolution = None
+    update_rate = None
+
+    def __init__(self, title=None, resolution=None, update_rate=None):
         """Initialize the scene.
 
         :attr:`application` is still ``None`` at this point. Application
         related initialization should be done in :meth:`on_enter`.
         """
         self._application = None
+        if title is not None:
+            self.title = title
+        if resolution is not None:
+            self.resolution = resolution
+        if update_rate is not None:
+            self.update_rate = update_rate
 
     @property
     def application(self):
@@ -104,8 +135,16 @@ class Scene:
         so you are free to access it through ``self.application``.
         Stuff like changing resolution etc. should be done here.
 
+        If you do override this method and want to use class variables
+        to change the application's settings, you must call
+        ``super().on_enter(previous_scene)`` in the subclass.
+
         :param Scene|None previous_scene: previous scene to run
         """
+        for attr in ('title', 'resolution', 'update_rate'):
+            value = getattr(self, attr)
+            if value is not None:
+                setattr(self.application, attr.lower(), value)
 
     def on_exit(self, next_scene):
         """Override this to deinitialize upon scene exiting.

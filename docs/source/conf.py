@@ -164,12 +164,12 @@ intersphinx_mapping = {'https://www.pygame.org/docs/': None}
 
 
 # -- Ensure that __init__ is documented -----------------------------------
-
-def skip(app, what, name, obj, skip, options):
-    if name == "__init__":
-        return False
-    return skip
-
-
-def setup(app):
-    app.connect("autodoc-skip-member", skip)
+#
+#def skip(app, what, name, obj, skip, options):
+#    if name == "__init__":
+#        return False
+#    return skip
+#
+#
+#def setup(app):
+#    app.connect("autodoc-skip-member", skip)

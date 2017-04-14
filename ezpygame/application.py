@@ -2,11 +2,18 @@ import pygame
 
 
 class Application:
-    """The class for creating a :mod:`pygame` application.
+    """A simple wrapper around :mod:`pygame` for running games easily.
 
-    A simple wrapper around :mod:`pygame` for handling its
-    initialization and running.  Also makes the scene
-    management seamless together with the :class:`scene.Scene` class.
+    Also makes scene management seamless together with
+    the :class:`.Scene` class.
+
+    :param str|None title: title to display in the window's title bar
+    :param tuple[int,int]|None resolution: resolution of the game window
+    :param int|None update_rate: how many times per second to update
+
+    If any parameters are left to ``None``, these settings must be
+    defined either manually through ``application.<setting> = value``
+    or via :class:`.Scene`'s class variable settings.
 
     Example usage:
 
@@ -28,15 +35,9 @@ class Application:
     """
 
     def __init__(self,
-                 title='EzPyGame App',
-                 resolution=(640, 480),
-                 update_rate=30):
-        """Initialize the application with initial settings.
-
-        :param str title: title to display in the window's title bar
-        :param tuple[int,int] resolution: resolution of the game window
-        :param int update_rate: how many times per second to update
-        """
+                 title=None,
+                 resolution=None,
+                 update_rate=None):
         pygame.init()
         self.update_rate = update_rate
         self._scene = None
@@ -46,7 +47,6 @@ class Application:
 
     @property
     def title(self):
-        """The title to display in the application's window."""
         return pygame.display.get_caption()
 
     @title.setter
@@ -55,7 +55,6 @@ class Application:
 
     @property
     def resolution(self):
-        """The application's window's resolution."""
         return self._screen.get_size()
 
     @resolution.setter
@@ -70,14 +69,12 @@ class Application:
     def change_scene(self, scene):
         """Change the currently active scene.
 
-        This will change the current scene and invoke
-        :meth:`scene.Scene.on_exit` and :meth:`scene.Scene.on_enter`
-        methods on the switching scenes. If ``None`` is provided,
-        the application will end.
+        This will invoke :meth:`.Scene.on_exit` and
+        :meth:`.Scene.on_enter` methods on the switching scenes.
 
-        The scene will change after the next update loop.
+        If ``None`` is provided, the application's execution will end.
 
-        :param scene.Scene|None scene: the scene to change into
+        :param Scene|None scene: the scene to change into
         """
         if self.active_scene is not None:
             self.active_scene.on_exit(next_scene=scene)

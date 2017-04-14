@@ -1,8 +1,8 @@
 class Scene:
-    """An individual scene in the application.
+    """An isolated scene which can be ran by an application.
 
-    Create a scene by subclassing and overriding any of the methods.
-    The hosting :class:`application.Application` instance is accessible
+    Create your own scene by subclassing and overriding any methods.
+    The hosting :class:`.Application` instance is accessible
     through the :attr:`application` property.
 
     Example usage with two scenes interacting:
@@ -15,7 +15,8 @@ class Scene:
                 self.font = pygame.font.Font(...)
 
             def on_enter(self, previous_scene):
-                self.application.title = 'Main Menu',
+                self.application.title = 'Main Menu'
+                self.application.resolution = (640, 480)
                 self.application.update_rate = 30
 
             def draw(self, screen):
@@ -34,6 +35,9 @@ class Scene:
 
 
         class Game(ezpygame.Scene):
+            title = 'The Game!'
+            resolution = (1280, 720)
+            update_rate = 60
 
             def __init__(self, size):
                 super().__init__()
@@ -42,9 +46,8 @@ class Scene:
                 ...
 
             def on_enter(self, previous_scene):
+                super().on_enter(previous_scene)
                 self.previous_scene = previous_scene
-                self.application.title = 'The Game!',
-                sefl.application.update_rate = 60
 
             def draw(self, screen):
                 self.player.draw(screen)
@@ -62,19 +65,16 @@ class Scene:
             def handle_event(self, event):
                 ...  # Player movement etc.
 
-    You can also use class variables to define custom application
-    settings for when the scene is entered:
+    The above two classes use different approaches for changing
+    the application's settings when the scene is entered:
 
-    .. code-block:: python
+    1. Manually set them in :meth:`on_enter`, as seen in ``Menu``
+    2. Use class variables, as I did with ``Game``
 
-        class MyScene(Scene):
-            title = 'My Awesome Scene'
-            resolution = (640, 480)
-            update_rate = 60
-
-    Any of these can be left out (defaults to ``None``) to not override
-    that particular setting. If you do override :meth:`on_enter`, you
-    must call ``super().on_enter(previous_scene)`` in the subclass.
+    When using class variables (2), you can leave out any setting
+    (defaults to ``None``) to not override that particular setting.
+    If you override :meth:`on_enter` in the subclass, you must call
+    ``super().on_enter(previous_scene)`` to use the class variables.
 
     These settings can further be overridden in individual instances:
 
@@ -89,11 +89,6 @@ class Scene:
     update_rate = None
 
     def __init__(self, title=None, resolution=None, update_rate=None):
-        """Initialize the scene.
-
-        :attr:`application` is still ``None`` at this point. Application
-        related initialization should be done in :meth:`on_enter`.
-        """
         self._application = None
         if title is not None:
             self.title = title
@@ -135,7 +130,7 @@ class Scene:
         so you are free to access it through ``self.application``.
         Stuff like changing resolution etc. should be done here.
 
-        If you do override this method and want to use class variables
+        If you override this method and want to use class variables
         to change the application's settings, you must call
         ``super().on_enter(previous_scene)`` in the subclass.
 

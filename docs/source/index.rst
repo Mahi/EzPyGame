@@ -6,3 +6,9 @@ EzPyGame
 
 .. automodule:: ezpygame
     :members:
+
+.. autoclass:: ezpygame.Application
+    :members:
+
+.. autoclass:: ezpygame.Scene
+    :members:

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>EzPyGame &#8212; EzPyGame 0.3.0 documentation</title>
+    <title>EzPyGame &#8212; EzPyGame 0.3.1 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.3.0',
+        VERSION:     '0.3.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -48,11 +48,26 @@
 <span class="target" id="module-ezpygame"></span><p>Easier and more pythonic usage of <a class="reference external" href="https://www.pygame.org/docs/ref/pygame.html#module-pygame" title="(in Pygame v1.9.2)"><code class="xref py py-mod docutils literal"><span class="pre">pygame</span></code></a>.</p>
 <dl class="class">
 <dt id="ezpygame.Application">
-<em class="property">class </em><code class="descclassname">ezpygame.</code><code class="descname">Application</code><span class="sig-paren">(</span><em>title='EzPyGame App'</em>, <em>resolution=(640</em>, <em>480)</em>, <em>update_rate=30</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezpygame.html#Application"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ezpygame.Application" title="Permalink to this definition">¶</a></dt>
-<dd><p>The class for creating a <a class="reference external" href="https://www.pygame.org/docs/ref/pygame.html#module-pygame" title="(in Pygame v1.9.2)"><code class="xref py py-mod docutils literal"><span class="pre">pygame</span></code></a> application.</p>
-<p>A simple wrapper around <a class="reference external" href="https://www.pygame.org/docs/ref/pygame.html#module-pygame" title="(in Pygame v1.9.2)"><code class="xref py py-mod docutils literal"><span class="pre">pygame</span></code></a>, which initializes and quits
-<a class="reference external" href="https://www.pygame.org/docs/ref/pygame.html#module-pygame" title="(in Pygame v1.9.2)"><code class="xref py py-mod docutils literal"><span class="pre">pygame</span></code></a> as the application starts/ends. Also makes the scene
-management seamless and fun together with <a class="reference internal" href="#ezpygame.Scene" title="ezpygame.Scene"><code class="xref py py-class docutils literal"><span class="pre">Scene</span></code></a>.</p>
+<em class="property">class </em><code class="descclassname">ezpygame.</code><code class="descname">Application</code><span class="sig-paren">(</span><em>title=None</em>, <em>resolution=None</em>, <em>update_rate=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezpygame/application.html#Application"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ezpygame.Application" title="Permalink to this definition">¶</a></dt>
+<dd><p>A simple wrapper around <a class="reference external" href="https://www.pygame.org/docs/ref/pygame.html#module-pygame" title="(in Pygame v1.9.2)"><code class="xref py py-mod docutils literal"><span class="pre">pygame</span></code></a> for running games easily.</p>
+<p>Also makes scene management seamless together with
+the <a class="reference internal" href="#ezpygame.Scene" title="ezpygame.Scene"><code class="xref py py-class docutils literal"><span class="pre">Scene</span></code></a> class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>title</strong> (<em>str|None</em>) &#8211; title to display in the window&#8217;s title bar</li>
+<li><strong>resolution</strong> (<em>tuple</em><em>[</em><em>int</em><em>,</em><em>int</em><em>]</em><em>|None</em>) &#8211; resolution of the game window</li>
+<li><strong>update_rate</strong> (<em>int|None</em>) &#8211; how many times per second to update</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>If any parameters are left to <code class="docutils literal"><span class="pre">None</span></code>, these settings must be
+defined either manually through <code class="docutils literal"><span class="pre">application.&lt;setting&gt;</span> <span class="pre">=</span> <span class="pre">value</span></code>
+or via <a class="reference internal" href="#ezpygame.Scene" title="ezpygame.Scene"><code class="xref py py-class docutils literal"><span class="pre">Scene</span></code></a>&#8216;s class variable settings.</p>
 <p>Example usage:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Menu</span><span class="p">(</span><span class="n">ezpygame</span><span class="o">.</span><span class="n">Scene</span><span class="p">):</span>
     <span class="o">...</span>
@@ -69,82 +84,52 @@ management seamless and fun together with <a class="reference internal" href="#e
 <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main_menu</span><span class="p">)</span>
 </pre></div>
 </div>
-<dl class="method">
-<dt id="ezpygame.Application.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>title='EzPyGame App'</em>, <em>resolution=(640</em>, <em>480)</em>, <em>update_rate=30</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezpygame.html#Application.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ezpygame.Application.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize the application with window settings.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>title</strong> (<em>str</em>) &#8211; title to display in the window&#8217;s title bar</li>
-<li><strong>resolution</strong> (<em>tuple</em><em>[</em><em>int</em><em>,</em><em>int</em><em>]</em><em></em>) &#8211; resolution of the game window</li>
-<li><strong>update_rate</strong> (<em>int</em>) &#8211; how many times per second to update</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="ezpygame.Application.active_scene">
 <code class="descname">active_scene</code><a class="headerlink" href="#ezpygame.Application.active_scene" title="Permalink to this definition">¶</a></dt>
-<dd><p>The currently active scene.</p>
+<dd><p>The currently active scene. Can be <code class="docutils literal"><span class="pre">None</span></code>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ezpygame.Application.change_scene">
-<code class="descname">change_scene</code><span class="sig-paren">(</span><em>scene</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezpygame.html#Application.change_scene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ezpygame.Application.change_scene" title="Permalink to this definition">¶</a></dt>
-<dd><p>Change the currently active scene in the application.</p>
-<p>This will change the current scene and invoke
-<a class="reference internal" href="#ezpygame.Scene.on_exit" title="ezpygame.Scene.on_exit"><code class="xref py py-meth docutils literal"><span class="pre">Scene.on_exit()</span></code></a> and <a class="reference internal" href="#ezpygame.Scene.on_enter" title="ezpygame.Scene.on_enter"><code class="xref py py-meth docutils literal"><span class="pre">Scene.on_enter()</span></code></a>
-on the switching scenes (unless <code class="docutils literal"><span class="pre">None</span></code>).</p>
-<p>The scene will change after the next update.</p>
+<code class="descname">change_scene</code><span class="sig-paren">(</span><em>scene</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezpygame/application.html#Application.change_scene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ezpygame.Application.change_scene" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the currently active scene.</p>
+<p>This will invoke <a class="reference internal" href="#ezpygame.Scene.on_exit" title="ezpygame.Scene.on_exit"><code class="xref py py-meth docutils literal"><span class="pre">Scene.on_exit()</span></code></a> and
+<a class="reference internal" href="#ezpygame.Scene.on_enter" title="ezpygame.Scene.on_enter"><code class="xref py py-meth docutils literal"><span class="pre">Scene.on_enter()</span></code></a> methods on the switching scenes.</p>
+<p>If <code class="docutils literal"><span class="pre">None</span></code> is provided, the application&#8217;s execution will end.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>scene</strong> (<a class="reference internal" href="#ezpygame.Scene" title="ezpygame.Scene"><em>Scene</em></a>) &#8211; the scene to change into</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>scene</strong> (<em>Scene|None</em>) &#8211; the scene to change into</td>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="ezpygame.Application.resolution">
-<code class="descname">resolution</code><a class="headerlink" href="#ezpygame.Application.resolution" title="Permalink to this definition">¶</a></dt>
-<dd><p>The application&#8217;s game window&#8217;s resolution.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ezpygame.Application.run">
-<code class="descname">run</code><span class="sig-paren">(</span><em>scene=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezpygame.html#Application.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ezpygame.Application.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run the application.</p>
+<code class="descname">run</code><span class="sig-paren">(</span><em>scene=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezpygame/application.html#Application.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ezpygame.Application.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute the application.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>scene</strong> (<a class="reference internal" href="#ezpygame.Scene" title="ezpygame.Scene"><em>Scene</em></a>) &#8211; initial scene to start the execution from</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>scene</strong> (<em>scene.Scene|None</em>) &#8211; scene to start the execution from</td>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="ezpygame.Application.title">
-<code class="descname">title</code><a class="headerlink" href="#ezpygame.Application.title" title="Permalink to this definition">¶</a></dt>
-<dd><p>The title to display in the application&#8217;s game window.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="ezpygame.Scene">
-<em class="property">class </em><code class="descclassname">ezpygame.</code><code class="descname">Scene</code><a class="reference internal" href="_modules/ezpygame.html#Scene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ezpygame.Scene" title="Permalink to this definition">¶</a></dt>
-<dd><p>An individual scene in the application.</p>
-<p>Create a scene by subclassing and overriding any of the methods.</p>
+<em class="property">class </em><code class="descclassname">ezpygame.</code><code class="descname">Scene</code><span class="sig-paren">(</span><em>title=None</em>, <em>resolution=None</em>, <em>update_rate=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezpygame/scene.html#Scene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ezpygame.Scene" title="Permalink to this definition">¶</a></dt>
+<dd><p>An isolated scene which can be ran by an application.</p>
+<p>Create your own scene by subclassing and overriding any methods.
+The hosting <a class="reference internal" href="#ezpygame.Application" title="ezpygame.Application"><code class="xref py py-class docutils literal"><span class="pre">Application</span></code></a> instance is accessible
+through the <a class="reference internal" href="#ezpygame.Scene.application" title="ezpygame.Scene.application"><code class="xref py py-attr docutils literal"><span class="pre">application</span></code></a> property.</p>
 <p>Example usage with two scenes interacting:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Menu</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
 
@@ -152,7 +137,8 @@ on the switching scenes (unless <code class="docutils literal"><span class="pre"
         <span class="bp">self</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">Font</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">on_enter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_scene</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Main Menu&#39;</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Main Menu&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="p">(</span><span class="mi">640</span><span class="p">,</span> <span class="mi">480</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">update_rate</span> <span class="o">=</span> <span class="mi">30</span>
 
     <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">screen</span><span class="p">):</span>
@@ -171,6 +157,9 @@ on the switching scenes (unless <code class="docutils literal"><span class="pre"
 
 
 <span class="k">class</span> <span class="nc">Game</span><span class="p">(</span><span class="n">ezpygame</span><span class="o">.</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;The Game!&#39;</span>
+    <span class="n">resolution</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1280</span><span class="p">,</span> <span class="mi">720</span><span class="p">)</span>
+    <span class="n">update_rate</span> <span class="o">=</span> <span class="mi">60</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -179,9 +168,8 @@ on the switching scenes (unless <code class="docutils literal"><span class="pre"
         <span class="o">...</span>
 
     <span class="k">def</span> <span class="nf">on_enter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_scene</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_enter</span><span class="p">(</span><span class="n">previous_scene</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">previous_scene</span> <span class="o">=</span> <span class="n">previous_scene</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;The Game!&#39;</span><span class="p">,</span>
-        <span class="n">sefl</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">update_rate</span> <span class="o">=</span> <span class="mi">60</span>
 
     <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">screen</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">screen</span><span class="p">)</span>
@@ -200,21 +188,32 @@ on the switching scenes (unless <code class="docutils literal"><span class="pre"
         <span class="o">...</span>  <span class="c1"># Player movement etc.</span>
 </pre></div>
 </div>
-<dl class="method">
-<dt id="ezpygame.Scene.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezpygame.html#Scene.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ezpygame.Scene.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
+<p>The above two classes use different approaches for changing
+the application&#8217;s settings when the scene is entered:</p>
+<ol class="arabic simple">
+<li>Manually set them in <a class="reference internal" href="#ezpygame.Scene.on_enter" title="ezpygame.Scene.on_enter"><code class="xref py py-meth docutils literal"><span class="pre">on_enter()</span></code></a>, as seen in <code class="docutils literal"><span class="pre">Menu</span></code></li>
+<li>Use class variables, as I did with <code class="docutils literal"><span class="pre">Game</span></code></li>
+</ol>
+<p>When using class variables (2), you can leave out any setting
+(defaults to <code class="docutils literal"><span class="pre">None</span></code>) to not override that particular setting.
+If you override <a class="reference internal" href="#ezpygame.Scene.on_enter" title="ezpygame.Scene.on_enter"><code class="xref py py-meth docutils literal"><span class="pre">on_enter()</span></code></a> in the subclass, you must call
+<code class="docutils literal"><span class="pre">super().on_enter(previous_scene)</span></code> to use the class variables.</p>
+<p>These settings can further be overridden in individual instances:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">my_scene0</span> <span class="o">=</span> <span class="n">MyScene</span><span class="p">()</span>
+<span class="n">my_scene0</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1280</span><span class="p">,</span> <span class="mi">720</span><span class="p">)</span>
+<span class="n">my_scene1</span> <span class="o">=</span> <span class="n">MyScene</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;My Second Awesome Scene&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="attribute">
 <dt id="ezpygame.Scene.application">
 <code class="descname">application</code><a class="headerlink" href="#ezpygame.Scene.application" title="Permalink to this definition">¶</a></dt>
-<dd><p>The application currently running the scene.</p>
+<dd><p>The host application that&#8217;s currently running the scene.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ezpygame.Scene.draw">
-<code class="descname">draw</code><span class="sig-paren">(</span><em>screen</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezpygame.html#Scene.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ezpygame.Scene.draw" title="Permalink to this definition">¶</a></dt>
-<dd><p>Draw the scene.</p>
+<code class="descname">draw</code><span class="sig-paren">(</span><em>screen</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezpygame/scene.html#Scene.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ezpygame.Scene.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this with the scene drawing.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -227,8 +226,8 @@ on the switching scenes (unless <code class="docutils literal"><span class="pre"
 
 <dl class="method">
 <dt id="ezpygame.Scene.handle_event">
-<code class="descname">handle_event</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezpygame.html#Scene.handle_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ezpygame.Scene.handle_event" title="Permalink to this definition">¶</a></dt>
-<dd><p>Process an event.</p>
+<code class="descname">handle_event</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezpygame/scene.html#Scene.handle_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ezpygame.Scene.handle_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this to handle an event in the scene.</p>
 <p>All of <a class="reference external" href="https://www.pygame.org/docs/ref/pygame.html#module-pygame" title="(in Pygame v1.9.2)"><code class="xref py py-mod docutils literal"><span class="pre">pygame</span></code></a>&#8216;s events are sent here, so filtering
 should be applied manually in the subclass.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -243,13 +242,19 @@ should be applied manually in the subclass.</p>
 
 <dl class="method">
 <dt id="ezpygame.Scene.on_enter">
-<code class="descname">on_enter</code><span class="sig-paren">(</span><em>previous_scene=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezpygame.html#Scene.on_enter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ezpygame.Scene.on_enter" title="Permalink to this definition">¶</a></dt>
-<dd><p>The scene is entered.</p>
+<code class="descname">on_enter</code><span class="sig-paren">(</span><em>previous_scene</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezpygame/scene.html#Scene.on_enter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ezpygame.Scene.on_enter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this to initialize upon scene entering.</p>
+<p>The <a class="reference internal" href="#ezpygame.Scene.application" title="ezpygame.Scene.application"><code class="xref py py-attr docutils literal"><span class="pre">application</span></code></a> property is initialized at this point,
+so you are free to access it through <code class="docutils literal"><span class="pre">self.application</span></code>.
+Stuff like changing resolution etc. should be done here.</p>
+<p>If you override this method and want to use class variables
+to change the application&#8217;s settings, you must call
+<code class="docutils literal"><span class="pre">super().on_enter(previous_scene)</span></code> in the subclass.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>previous_scene</strong> (<a class="reference internal" href="#ezpygame.Scene" title="ezpygame.Scene"><em>Scene</em></a>) &#8211; previous scene to run, or <code class="docutils literal"><span class="pre">None</span></code></td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>previous_scene</strong> (<em>Scene|None</em>) &#8211; previous scene to run</td>
 </tr>
 </tbody>
 </table>
@@ -257,13 +262,15 @@ should be applied manually in the subclass.</p>
 
 <dl class="method">
 <dt id="ezpygame.Scene.on_exit">
-<code class="descname">on_exit</code><span class="sig-paren">(</span><em>next_scene=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezpygame.html#Scene.on_exit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ezpygame.Scene.on_exit" title="Permalink to this definition">¶</a></dt>
-<dd><p>The scene is exited.</p>
+<code class="descname">on_exit</code><span class="sig-paren">(</span><em>next_scene</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezpygame/scene.html#Scene.on_exit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ezpygame.Scene.on_exit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this to deinitialize upon scene exiting.</p>
+<p>The <a class="reference internal" href="#ezpygame.Scene.application" title="ezpygame.Scene.application"><code class="xref py py-attr docutils literal"><span class="pre">application</span></code></a> property is still initialized at this
+point. Feel free to do saving, settings reset, etc. here.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>next_scene</strong> (<a class="reference internal" href="#ezpygame.Scene" title="ezpygame.Scene"><em>Scene</em></a>) &#8211; next scene to run, or <code class="docutils literal"><span class="pre">None</span></code></td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>next_scene</strong> (<em>Scene|None</em>) &#8211; next scene to run</td>
 </tr>
 </tbody>
 </table>
@@ -271,8 +278,8 @@ should be applied manually in the subclass.</p>
 
 <dl class="method">
 <dt id="ezpygame.Scene.update">
-<code class="descname">update</code><span class="sig-paren">(</span><em>dt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezpygame.html#Scene.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ezpygame.Scene.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the scene.</p>
+<code class="descname">update</code><span class="sig-paren">(</span><em>dt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezpygame/scene.html#Scene.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ezpygame.Scene.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this with the scene update tick.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
